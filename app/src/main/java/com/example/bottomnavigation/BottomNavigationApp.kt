@@ -2,7 +2,6 @@ package com.example.bottomnavigation
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bottomnavigation.cources.CourseTabs
 import com.example.bottomnavigation.nvgraph.NavGraph
+import com.example.bottomnavigation.ui.theme.BottomNavigationTheme
 import java.util.Locale
 
 
@@ -36,42 +35,44 @@ import java.util.Locale
 fun BottomNavigationApp(
     finishActivity: () -> Unit
 ) {
-    val tabs = remember {
-        CourseTabs.values()
-    }
-    val navController = rememberNavController()
-
-    Scaffold(
-        containerColor = Color.Blue,
-        bottomBar = {
-            AppBottomBar(navController = navController, tabs = tabs)
+    BottomNavigationTheme {
+        val tabs = remember {
+            CourseTabs.values()
         }
-    ) { padding ->
-        NavGraph(
-            finishActivity = finishActivity,
-            navController = navController,
-            modifier = Modifier.padding(padding)
-        )
+        val navController = rememberNavController()
+
+        Scaffold(
+            containerColor = Color.Blue,
+            bottomBar = {
+                AppBottomBar(navController = navController, tabs = tabs)
+            }
+        ) { padding ->
+            NavGraph(
+                finishActivity = finishActivity,
+                navController = navController,
+                modifier = Modifier.padding(padding)
+            )
+        }
     }
 }
 
 
 @Composable
-fun AppBottomBar(navController : NavHostController,tabs : Array<CourseTabs>){
+fun AppBottomBar(navController: NavHostController, tabs: Array<CourseTabs>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     val currentRoute = navBackStackEntry?.destination?.route ?: CourseTabs.FEATURED.route
 
 
-    val routes = remember { CourseTabs.values().map { it.route }}
+    val routes = remember { CourseTabs.values().map { it.route } }
 
-    if (currentRoute in routes){
+    if (currentRoute in routes) {
         NavigationBar(
             modifier = Modifier.windowInsetsBottomHeight(
                 WindowInsets.navigationBars.add(WindowInsets(bottom = 56.dp))
             )
-        ){
-            tabs.forEach {tab ->
+        ) {
+            tabs.forEach { tab ->
                 NavigationBarItem(
                     modifier = Modifier.navigationBarsPadding(),
                     selected = currentRoute == tab.route,
@@ -102,23 +103,7 @@ fun AppBottomBar(navController : NavHostController,tabs : Array<CourseTabs>){
         }
 
 
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
